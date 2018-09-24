@@ -79,11 +79,8 @@ public class Parser {
                 break;
             }
             case 3: {
-                try {
-                    taskStorage.saveToFile("Storage.txt", tasksManager.getTasks());
-                } catch (IOException e) {
-                    System.out.println(e);
-                }
+                System.out.println("update,mark as done,remove");
+                String editInput=acceptStringInput();
                 break;
             }
             case 4: {

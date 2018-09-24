@@ -13,10 +13,7 @@ public class App {
             if (userOption == 5) {
                 return;
             }
-
             p.startProcessing(userOption);
         } while (true);
-
-
     }
 }
