@@ -65,6 +65,7 @@ public class Parser {
                 System.out.println("Enter Due Date");
                 String inputDate = acceptStringInput();
                 Date date = null;
+                
                 try {
                     date = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
                 } catch (java.text.ParseException e) {
