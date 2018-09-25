@@ -1,3 +1,4 @@
+//This class deals with storing and retrieving data from file.
 package todo;
 
 import java.io.*;
@@ -14,18 +15,13 @@ public class TaskStorage {
         os.writeObject(tasks);
     }
 
-    public ArrayList<Task> readFromFile(String sourceFile)
-            throws IOException, ClassNotFoundException {
-        // Make sure the file can be found.
-        // URL resource = getClass().getResource(sourceFile);
-
+    public ArrayList<Task> readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
         File source = new File(sourceFile);
-        ObjectInputStream is = new ObjectInputStream(
-                new FileInputStream(source));
 
-        ArrayList<Task> t = (ArrayList<Task>) is.readObject();
-        is.close();
-        return (t);
-
+        System.out.println("a");
+                ObjectInputStream is = new ObjectInputStream(new FileInputStream(source));
+            ArrayList<Task> t  = (ArrayList<Task>) is.readObject();
+            is.close();
+            return (t);
     }
 }

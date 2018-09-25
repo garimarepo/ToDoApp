@@ -1,11 +1,10 @@
 package todo;
 
-
 import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Parser p = new Parser();
         do {
             p.printWelcome();
@@ -16,4 +15,5 @@ public class App {
             p.startProcessing(userOption);
         } while (true);
     }
+
 }

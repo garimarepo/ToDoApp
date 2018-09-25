@@ -1,3 +1,6 @@
+/*This is the main controller class of ToDoApp.
+It shows output to the user according to his selection.*/
+
 package todo;
 
 import java.io.IOException;
@@ -8,9 +11,6 @@ import java.util.Iterator;
 
 
 public class TaskManager {
-
-
-    // Parser p=new Parser();
     TaskStorage taskStorage;
     private ArrayList<Task> tasks;
     private Iterator<Task> it;
@@ -35,7 +35,7 @@ public class TaskManager {
     public int finishedTasks() {
         return 5;
     }
-
+//Filtered the tasks according to the selected project name
 
     public void tasksByProject(String project) throws IOException, ClassNotFoundException {
         ArrayList<Task> tasks = taskStorage.readFromFile("/Users/tmp-sda-1181/IdeaProjects/todo/Storage.txt");
@@ -43,18 +43,23 @@ public class TaskManager {
         while (it.hasNext()) {
             Task task = it.next();
             if (project.equals(task.getProject())) {
-                System.out.println(task.getProject() + " " + task.getTitle() + " " + task.getdueDate() + " " + task.getStatus());
+                System.out.println(task.getProject() + " " + task.getTitle() + " " + task.getdueDate() + " "
+                        + task.getStatus());
 
             }
         }
     }
+    //Shows all the tasks sorted by date
 
     public void tasksByDate() throws IOException, ClassNotFoundException {
+        ArrayList<Task> tasks = taskStorage.readFromFile("/Users/tmp-sda-1181/IdeaProjects/ToDoApp/Storage.txt");
+        System.out.println("b");
         Collections.sort(tasks);
         Iterator<Task> it = tasks.iterator();
         while (it.hasNext()) {
             Task task = it.next();
-            System.out.println(task.getProject() + " " + task.getTitle() + " " + task.getdueDate() + " " + task.getStatus());
+            System.out.println(task.getProject() + " " + task.getTitle() + " " + task.getdueDate() + " "
+                    + task.getStatus());
 
 
         }
@@ -66,21 +71,10 @@ public class TaskManager {
     public void addNewTask(Task newTask) {
 
         tasks.add(newTask);
-        //showtasks();
         System.out.println("Added the task");
 
-        //p.printWelcome();
-        // p.startProcessing();
 
     }
 
-    public void showtasks() {
-        it = tasks.iterator();
 
-        while (it.hasNext()) {
-            Task t = it.next();
-            System.out.println("a");
-            System.out.println(t.getProject() + t.getTitle() + t.getdueDate() + t.getStatus());
-        }
-    }
 }

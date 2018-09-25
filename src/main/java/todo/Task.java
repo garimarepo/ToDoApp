@@ -1,3 +1,6 @@
+// This class represents a single task in ToDoApp
+
+
 package todo;
 
 import java.io.Serializable;
@@ -8,15 +11,13 @@ public class Task implements Serializable, Comparable {
     private String project;
     private Date dueDate;
     private boolean status;
-    //TaskManager taskManager;
-
+    private static final long serialVersionUID = 6529685098267757690L;
 
     public Task(String title, String project, Date dueDate, boolean status) {
         this.title = title;
         this.project = project;
         this.dueDate = dueDate;
         this.status = status;
-
     }
 
     public String getTitle() {
