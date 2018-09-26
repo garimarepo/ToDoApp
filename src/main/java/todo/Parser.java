@@ -34,7 +34,8 @@ public class Parser {
             System.out.println("(1) Show Task List (by date or project)");
             System.out.println("(2) Add New Task");
             System.out.println("(3) Edit Task (update, mark as done, remove)");
-            System.out.println("(4) Save and Quit");
+            System.out.println("(4) Save");
+            System.out.println("(5) Quit");
         }
     }
 
@@ -77,27 +78,78 @@ public class Parser {
 //                    System.out.println("wrong format");
 //                    return;
 //                }
-//                System.out.println("Enter status: false for incomplete and true for complete");
-//                String inputStatus = userInput();
-//                boolean status = Boolean.valueOf(inputStatus);
-//                Task newTask = new Task(title, project, date, status);
-                tasksManager.addNewTask(new Task(title,"a", new Date(), true));
+               System.out.println("Enter status: false for incomplete and true for complete");
+               String inputStatus = userInput();
+               boolean status = Boolean.valueOf(inputStatus);
+              // Task newTask = new Task(title, project, date, status);
+                tasksManager.addNewTask(new Task(tasksManager.getNewTaskId(), title,"a", new Date(), status));
                 break;
             }
             case 3: {
-                System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
                 unfinishedTasks();
+                System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
+
+
+
                 String editInput = userInput();
                 if(editInput.equals("2"))
                 {
+                    System.out.println("Choose task(id) for mark as done");
+                    String markAsDoneInput=userInput();
+                    int id=Integer.parseInt(markAsDoneInput);
+
+                    ArrayList<Task> tasks=tasksManager.getTasks();
+                    Iterator it=tasks.iterator();
+                    while(it.hasNext())
+                    {
+                        Task task=(Task)it.next();
+                        if(id==task.getId())
+                        {
+                            task.setStatus(false);
+                            taskStorage.saveToFile("Storage.txt", tasks);
+                            //break;
+                        }
+
+
+                    }
+                    System.out.println("Your task is now mark as done that is changed the status from true to false" +
+                            " and here is the new list");
+                    tasksManager.tasksByDate();
+
+
+                }
+
+                else if(editInput.equals("3"))
+                {
+                    System.out.println("Choose task(id) for removing");
+                String removeInput=userInput();
+                int id=Integer.parseInt(removeInput);
+                ArrayList<Task> tasks=tasksManager.getTasks();
+                Iterator it=tasks.iterator();
+                while(it.hasNext())
+                {
+                    Task task=(Task)it.next();
+                    if(id==task.getId())
+                    {
+                        it.remove();
+                        taskStorage.saveToFile("Storage.txt", tasks);
+
+                    }
+
+                }
+                System.out.println("Your task is removed. Now the new list is:");
+                tasksManager.tasksByDate();
 
                 }
                 break;
             }
             case 4: {
                 taskStorage.saveToFile("Storage.txt", tasksManager.getTasks());
+                System.out.println("Your task has saved and here is the new list");
+                tasksManager.tasksByDate();
                 break;
             }
+
         }
     }
 
@@ -115,15 +167,14 @@ public class Parser {
     }
 
     public void unfinishedTasks() throws IOException, ClassNotFoundException {
-        ArrayList<Task> tasks=taskStorage.readFromFile("Storage.txt");
+        ArrayList<Task> tasks=tasksManager.getTasks();
         Iterator it=tasks.iterator();
         while(it.hasNext())
         {
             Task task=(Task)it.next();
             if(task.getStatus()==false)
             {
-                System.out.println(task.getProject() + " " + task.getTitle() + " " + task.getdueDate()
-                        + " " + task.getStatus());
+                tasksManager.printTask(task);
             }
         }
     }

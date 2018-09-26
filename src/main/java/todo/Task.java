@@ -7,13 +7,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Task implements Serializable, Comparable {
+
+
+    private int id;
     private String title;
     private String project;
     private Date dueDate;
     private boolean status;
     private static final long serialVersionUID = 6529685098267757690L;
 
-    public Task(String title, String project, Date dueDate, boolean status) {
+    public Task(int id, String title, String project, Date dueDate, boolean status) {
+        this.id=id;
         this.title = title;
         this.project = project;
         this.dueDate = dueDate;
@@ -50,6 +54,14 @@ public class Task implements Serializable, Comparable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

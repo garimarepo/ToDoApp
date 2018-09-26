@@ -15,13 +15,20 @@ public class TaskStorage {
         os.writeObject(tasks);
     }
 
-    public ArrayList<Task> readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
+    public ArrayList<Task> readFromFile(String sourceFile)  {
         File source = new File(sourceFile);
 
         System.out.println("a");
-                ObjectInputStream is = new ObjectInputStream(new FileInputStream(source));
-            ArrayList<Task> t  = (ArrayList<Task>) is.readObject();
+        try {
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream(source));
+            ArrayList<Task> t = (ArrayList<Task>) is.readObject();
             is.close();
             return (t);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        return new ArrayList<Task>();
     }
 }
