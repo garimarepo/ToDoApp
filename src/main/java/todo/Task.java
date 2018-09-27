@@ -1,5 +1,6 @@
-// This class represents a single task in ToDoApp
-
+/**
+ * This class represents a single task in ToDoApp.
+ */
 
 package todo;
 
@@ -8,16 +9,15 @@ import java.util.Date;
 
 public class Task implements Serializable, Comparable {
 
-
+    private static final long serialVersionUID = 6529685098267757690L;
     private int id;
     private String title;
     private String project;
     private Date dueDate;
     private boolean status;
-    private static final long serialVersionUID = 6529685098267757690L;
 
     public Task(int id, String title, String project, Date dueDate, boolean status) {
-        this.id=id;
+        this.id = id;
         this.title = title;
         this.project = project;
         this.dueDate = dueDate;
@@ -63,6 +63,12 @@ public class Task implements Serializable, Comparable {
     public void setId(int id) {
         this.id = id;
     }
+
+    /**
+     * Compare tasks according to the due dates.
+     * @param o Task object
+     * @return an integer value for comparison
+     */
 
     @Override
     public int compareTo(Object o) {
