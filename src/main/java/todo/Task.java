@@ -66,6 +66,7 @@ public class Task implements Serializable, Comparable {
 
     /**
      * Compare tasks according to the due dates.
+     *
      * @param o Task object
      * @return an integer value for comparison
      */

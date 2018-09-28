@@ -10,10 +10,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class TaskStorage {
-    private final static String  STORAGE_LOCATION= "/Users/tmp-sda-1181/IdeaProjects/ToDoApp/Storage.txt";
+    private final static String STORAGE_LOCATION = "/Users/tmp-sda-1181/IdeaProjects/ToDoApp/Storage.txt";
 
     /**
      * Save task list to the file
+     *
      * @param tasks the list of tasks
      * @throws IOException
      */
@@ -26,12 +27,12 @@ public class TaskStorage {
 
     /**
      * Retrieve data from file
+     *
      * @return the list of file
      */
 
     public ArrayList<Task> readFromFile() {
         File source = new File(STORAGE_LOCATION);
-        System.out.println("a");
         try {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(source));
             ArrayList<Task> t = (ArrayList<Task>) is.readObject();

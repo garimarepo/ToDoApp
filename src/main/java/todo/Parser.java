@@ -74,7 +74,6 @@ public class Parser {
     }
 
     /**
-     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -90,27 +89,40 @@ public class Parser {
         }
     }
 
-
+    /**
+     * Add a task, accepts input from user for a task like title, project, due date, status
+     *
+     * @throws ParseException
+     */
     private void addTask() throws ParseException {
         System.out.println("Enter task title");
         String title = userInput();
         System.out.println("Enter project");
         String project = userInput();
-        System.out.println("Enter Due Date");
-        String inputDate = userInput();
+
         Date date = null;
-        try {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
-        } catch (java.text.ParseException e) {
-            System.out.println("wrong format, please try again");
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
-            return;
+        while (true) {
+            try {
+                System.out.println("Enter Due Date");
+                String inputDate = userInput();
+                date = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
+                break;
+            } catch (java.text.ParseException e) {
+                System.out.println("wrong format, please try again");
+            }
         }
         System.out.println("Enter status: false for incomplete and true for complete");
         String inputStatus = userInput();
         boolean status = Boolean.valueOf(inputStatus);
-        tasksManager.addNewTask(new Task(tasksManager.getNewTaskId(), title, "a", new Date(), status));
+        tasksManager.addNewTask(new Task(tasksManager.getNewTaskId(), title, project, date, status));
     }
+
+    /**
+     * Change the status of a task to false that is mark as done
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
 
     private void changeStatus() throws IOException, ClassNotFoundException {
         System.out.println("Choose task(id) for mark as done");
@@ -129,6 +141,13 @@ public class Parser {
         tasksManager.displayTasksByDate();
     }
 
+    /**
+     * Remove the task corresponding to the selected id
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+
     private void removeTask() throws IOException, ClassNotFoundException {
         System.out.println("Choose task(id) for removing");
         String removeInput = userInput();
@@ -145,8 +164,14 @@ public class Parser {
         tasksManager.displayTasksByDate();
     }
 
+    /**
+     * Edit the task. This may involve updating, marking it as done or removing
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+
     private void editTask() throws IOException, ClassNotFoundException {
-        unfinishedTasks();
         System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
         String editInput = userInput();
         if (editInput.equals("2")) {
