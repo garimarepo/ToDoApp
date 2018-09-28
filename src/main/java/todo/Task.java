@@ -70,7 +70,6 @@ public class Task implements Serializable, Comparable {
      * @param o Task object
      * @return an integer value for comparison
      */
-
     @Override
     public int compareTo(Object o) {
         Task tasks = (Task) o;

@@ -47,9 +47,7 @@ public class Parser {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-
     public void startProcessing(int chosenTask) throws IOException, ClassNotFoundException, ParseException {
-
         switch (chosenTask) {
             case 1:
                 showTask();
@@ -99,7 +97,6 @@ public class Parser {
         String title = userInput();
         System.out.println("Enter project");
         String project = userInput();
-
         Date date = null;
         while (true) {
             try {
@@ -123,7 +120,6 @@ public class Parser {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-
     private void changeStatus() throws IOException, ClassNotFoundException {
         System.out.println("Choose task(id) for mark as done");
         String markAsDoneInput = userInput();
@@ -147,7 +143,6 @@ public class Parser {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-
     private void removeTask() throws IOException, ClassNotFoundException {
         System.out.println("Choose task(id) for removing");
         String removeInput = userInput();
@@ -164,23 +159,63 @@ public class Parser {
         tasksManager.displayTasksByDate();
     }
 
+
+    public void updateTask() {
+        displayAllTasks();
+        System.out.println("Choose task(id) for update");
+        String updateInput = userInput();
+        int id = Integer.parseInt(updateInput);
+        Task task = null;
+        boolean idStatus = true;
+        while (idStatus) {
+            task = getTaskById(id);
+            if (task == null) {
+                System.out.println("This Id does not exist. Please select an existing task(id) for update");
+                updateInput = userInput();
+                id = Integer.parseInt(updateInput);
+            } else {
+                break;
+            }
+        }
+        System.out.println("Which field you want to update. Select 1 for title, 2 for project, 3 for due date, 4 for status");
+        String updatefieldInput = userInput();
+        int updatefieldInt = Integer.parseInt(updatefieldInput);
+        switch (updatefieldInt) {
+            case 1:
+                updateTitle(task);
+                break;
+            case 2:
+                updateProject(task);
+                break;
+            case 3:
+                updateDueDate(task);
+                break;
+            case 4:
+                updateStatus(task);
+                break;
+        }
+        System.out.println("Updated the list and here is the new updated list");
+        displayAllTasks();
+    }
+
+
     /**
      * Edit the task. This may involve updating, marking it as done or removing
      *
      * @throws IOException
      * @throws ClassNotFoundException
      */
-
     private void editTask() throws IOException, ClassNotFoundException {
         System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
         String editInput = userInput();
-        if (editInput.equals("2")) {
+        if (editInput.equals("1")) {
+            updateTask();
+        } else if (editInput.equals("2")) {
             changeStatus();
         } else if (editInput.equals("3")) {
             removeTask();
         }
     }
-
 
     private String userInput() {
         String inputLine;
@@ -204,5 +239,64 @@ public class Parser {
             }
         }
     }
+
+    private void displayAllTasks() {
+        ArrayList<Task> tasks = tasksManager.getTasks();
+        Iterator it = tasks.iterator();
+        while (it.hasNext()) {
+            Task task = (Task) it.next();
+            tasksManager.printTask(task);
+        }
+    }
+
+
+    private void updateTitle(Task task) {
+        System.out.println("Enter the new value for title");
+        String newtitle = userInput();
+        task.setTitle(newtitle);
+    }
+
+    private void updateProject(Task task) {
+        System.out.println("Enter the new value for project");
+        String newProject = userInput();
+        task.setProject(newProject);
+    }
+
+    private void updateDueDate(Task task) {
+        System.out.println("Enter the new value for due date");
+        Date newDate = null;
+        boolean dateStatus = true;
+        while (dateStatus) {
+            try {
+                String inputDate = userInput();
+                newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
+                dateStatus = false;
+            } catch (java.text.ParseException e) {
+                System.out.println("wrong format, please try again");
+            }
+        }
+        task.setdueDate(newDate);
+    }
+
+    private void updateStatus(Task task) {
+        System.out.println("Enter status: false for incomplete and true for complete");
+        String inputStatus = userInput();
+        boolean status = Boolean.valueOf(inputStatus);
+        task.setStatus(status);
+    }
+
+    private Task getTaskById(int id) {
+        ArrayList<Task> tasks = tasksManager.getTasks();
+        Iterator<Task> it = tasks.iterator();
+        Task task = null;
+        while (it.hasNext()) {
+            task = it.next();
+            if (id == task.getId()) {
+                return task;
+            }
+        }
+        return null;
+    }
 }
+
 
