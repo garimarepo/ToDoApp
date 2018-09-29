@@ -18,7 +18,6 @@ public class TaskStorage {
      * @param tasks the list of tasks
      * @throws IOException
      */
-
     public void saveToFile(ArrayList<Task> tasks) throws IOException {
         Path destination = Paths.get(STORAGE_LOCATION).toAbsolutePath();
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(destination.toString()));
@@ -30,7 +29,6 @@ public class TaskStorage {
      *
      * @return the list of file
      */
-
     public ArrayList<Task> readFromFile() {
         File source = new File(STORAGE_LOCATION);
         try {
