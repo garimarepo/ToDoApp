@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class TaskManager {
@@ -19,6 +20,10 @@ public class TaskManager {
     public TaskManager() {
         taskStorage = new TaskStorage();
         tasks = taskStorage.readFromFile();
+    }
+
+    public TaskManager(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public ArrayList<Task> getTasks() {
