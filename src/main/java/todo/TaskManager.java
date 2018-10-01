@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TaskManager {
@@ -21,20 +23,17 @@ public class TaskManager {
         tasks = taskStorage.readFromFile();
     }
 
+    public TaskManager(ArrayList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
     public int countToDoTasks() {
-        Iterator<Task> it = tasks.iterator();
-        int count = 0;
-        while (it.hasNext()) {
-            Task task = it.next();
-            if (task.getStatus() == false) {
-                count++;
-            }
-        }
-        return count;
+        return Long.valueOf(tasks.stream().filter(task -> !task.getStatus()).count()).intValue();
+        
     }
 
     public int countFinishedTasks() {
@@ -57,14 +56,8 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void displayTasksByProject(String project) throws IOException, ClassNotFoundException {
-        Iterator<Task> it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = it.next();
-            if (project.equals(task.getProject())) {
-                printTask(task);
-            }
-        }
+    public List<Task> displayTasksByProject(final String project) throws IOException, ClassNotFoundException {
+        return tasks.stream().filter(task -> project.equals(task.getProject())).collect(Collectors.toList());
     }
 
     /**
@@ -73,15 +66,12 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void displayTasksByDate() throws IOException, ClassNotFoundException {
-        System.out.println("b");
+    public List<Task> displayTasksByDate() throws IOException, ClassNotFoundException {
         Collections.sort(tasks);
-        Iterator<Task> it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = it.next();
-            printTask(task);
-        }
+        return tasks;
     }
+
+
 
     public int getNewTaskId() {
         int max = 0;
@@ -101,20 +91,6 @@ public class TaskManager {
         System.out.println("Added the task");
     }
 
-    /**
-     * print details of task object.
-     *
-     * @param task The object for which the details are printed.
-     */
-
-    public void printTask(Task task) {
-        System.out.println("------------------------------");
-        System.out.println("Task Id: " + task.getId());
-        System.out.println("Project: " + task.getProject());
-        System.out.println("Title: " + task.getTitle());
-        System.out.println("Due Date: " + task.getdueDate());
-        System.out.println("Status: " + task.getStatus());
-    }
 
     public void saveToFile() throws IOException {
         taskStorage.saveToFile(tasks);
