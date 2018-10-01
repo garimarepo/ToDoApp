@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class Parser {
@@ -61,7 +62,8 @@ public class Parser {
             case 4: {
                 tasksManager.saveToFile();
                 System.out.println("Your task has saved and here is the new list");
-                tasksManager.displayTasksByDate();
+                List<Task> tasks=tasksManager.displayTasksByDate();
+                printTaskList(tasks);
                 break;
             }
         }
@@ -79,11 +81,13 @@ public class Parser {
         System.out.println("By date OR by project");
         String input = userInput();
         if (input.equals("date")) {
-            tasksManager.displayTasksByDate();
+            printTaskList(tasksManager.displayTasksByDate());
         } else if (input.equals("project")) {
             System.out.println("Enter project name");
             String inputProject = userInput();
-            tasksManager.displayTasksByProject(inputProject);
+            List<Task> tasks=tasksManager.displayTasksByProject(inputProject);
+            System.out.println("a");
+            printTaskList(tasks);
         }
     }
 
@@ -130,11 +134,12 @@ public class Parser {
             Task task = (Task) it.next();
             if (id == task.getId()) {
                 task.setStatus(false);
+                break;
             }
         }
         System.out.println("Your task is now mark as done that is changed the status from true to false" +
                 " and here is the new list");
-        tasksManager.displayTasksByDate();
+        printTaskList(tasksManager.displayTasksByDate());
     }
 
     /**
@@ -156,7 +161,7 @@ public class Parser {
             }
         }
         System.out.println("Your task is removed. Now the new list is:");
-        tasksManager.displayTasksByDate();
+        printTaskList(tasksManager.displayTasksByDate());
     }
 
 
@@ -231,22 +236,22 @@ public class Parser {
 
     private void unfinishedTasks() {
         ArrayList<Task> tasks = tasksManager.getTasks();
-        Iterator it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = (Task) it.next();
-            if (task.getStatus() == false) {
-                tasksManager.printTask(task);
+        for(Task task : tasks)
+        {
+            if(task.getStatus() == false)
+            {
+                printTask(task);
             }
         }
     }
 
     private void displayAllTasks() {
         ArrayList<Task> tasks = tasksManager.getTasks();
-        Iterator it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = (Task) it.next();
-            tasksManager.printTask(task);
+        for(Task task : tasks)
+        {
+            printTask(task);
         }
+
     }
 
 
@@ -297,6 +302,33 @@ public class Parser {
         }
         return null;
     }
+
+    /**
+     * print details of task object.
+     *
+     * @param task The object for which the details are printed.
+     */
+
+    public void printTask(Task task) {
+        System.out.println("------------------------------");
+        System.out.println("Task Id: " + task.getId());
+        System.out.println("Project: " + task.getProject());
+        System.out.println("Title: " + task.getTitle());
+        System.out.println("Due Date: " + task.getdueDate());
+        System.out.println("Status: " + task.getStatus());
+
+    }
+
+    public void printTaskList(List<Task> tasks)
+    {
+        for(Task task : tasks)
+        {
+
+            printTask(task);
+            System.out.println("a");
+        }
+    }
+
 }
 
 
