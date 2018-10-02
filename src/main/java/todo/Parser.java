@@ -62,7 +62,7 @@ public class Parser {
             case 4: {
                 tasksManager.saveToFile();
                 System.out.println("Your task has saved and here is the new list");
-                List<Task> tasks=tasksManager.displayTasksByDate();
+                List<Task> tasks = tasksManager.displayTasksByDate();
                 printTaskList(tasks);
                 break;
             }
@@ -85,7 +85,7 @@ public class Parser {
         } else if (input.equals("project")) {
             System.out.println("Enter project name");
             String inputProject = userInput();
-            List<Task> tasks=tasksManager.displayTasksByProject(inputProject);
+            List<Task> tasks = tasksManager.displayTasksByProject(inputProject);
             System.out.println("a");
             printTaskList(tasks);
         }
@@ -115,7 +115,7 @@ public class Parser {
         System.out.println("Enter status: false for incomplete and true for complete");
         String inputStatus = userInput();
         boolean status = Boolean.valueOf(inputStatus);
-        tasksManager.addNewTask(new Task(tasksManager.getNewTaskId(), title, project, date, status));
+        tasksManager.addNewTask(title, project, date, status);
     }
 
     /**
@@ -236,10 +236,8 @@ public class Parser {
 
     private void unfinishedTasks() {
         ArrayList<Task> tasks = tasksManager.getTasks();
-        for(Task task : tasks)
-        {
-            if(task.getStatus() == false)
-            {
+        for (Task task : tasks) {
+            if (task.getStatus() == false) {
                 printTask(task);
             }
         }
@@ -247,8 +245,7 @@ public class Parser {
 
     private void displayAllTasks() {
         ArrayList<Task> tasks = tasksManager.getTasks();
-        for(Task task : tasks)
-        {
+        for (Task task : tasks) {
             printTask(task);
         }
 
@@ -292,10 +289,7 @@ public class Parser {
 
     private Task getTaskById(int id) {
         ArrayList<Task> tasks = tasksManager.getTasks();
-        Iterator<Task> it = tasks.iterator();
-        Task task = null;
-        while (it.hasNext()) {
-            task = it.next();
+        for (Task task : tasks) {
             if (id == task.getId()) {
                 return task;
             }
@@ -319,16 +313,13 @@ public class Parser {
 
     }
 
-    public void printTaskList(List<Task> tasks)
-    {
-        for(Task task : tasks)
-        {
+    public void printTaskList(List<Task> tasks) {
+        for (Task task : tasks) {
 
             printTask(task);
-            System.out.println("a");
         }
-    }
 
+    }
 }
 
 
