@@ -6,10 +6,7 @@
 package todo;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -37,16 +34,13 @@ public class TaskManager {
     }
 
     public int countFinishedTasks() {
-        Iterator<Task> it = taskStore.getTasks().iterator();
         int count = 0;
-        while (it.hasNext()) {
-            Task task = it.next();
+        for (Task task : taskStore.getTasks()) {
             if (task.getStatus() == true) {
                 count++;
             }
         }
         return count;
-
     }
 
     /**
@@ -78,8 +72,9 @@ public class TaskManager {
     }
 
 
-    public void addNewTask(Task newTask) {
-        taskStore.getTasks().add(newTask);
+    public void addNewTask(String title, String project, Date date, boolean status) {
+        Task task = new Task(getNewTaskId(), title, project, date, status);
+        taskStore.getTasks().add(task);
         System.out.println("Added the task");
     }
 

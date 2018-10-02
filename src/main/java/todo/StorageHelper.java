@@ -10,12 +10,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class StorageHelper {
-    private final static String STORAGE_LOCATION = "/Users/tmp-sda-1181/IdeaProjects/ToDoApp/Storage.txt";
+    private final static String STORAGE_LOCATION = "Storage.txt";
 
     /**
      * Save task list to the file
      *
-     * @param tasks the list of tasks
+     * @param taskStore the list of tasks
      * @throws IOException
      */
     public void saveToFile(TaskStore taskStore) throws IOException {

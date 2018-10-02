@@ -7,7 +7,7 @@ package todo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Task implements Serializable, Comparable {
+public class Task implements Serializable, Comparable<Task> {
 
     private static final long serialVersionUID = 6529685098267757690L;
     private int id;
@@ -71,8 +71,8 @@ public class Task implements Serializable, Comparable {
      * @return an integer value for comparison
      */
     @Override
-    public int compareTo(Object o) {
-        Task tasks = (Task) o;
+    public int compareTo(Task o) {
+        Task tasks = o;
         if (this.dueDate.after(tasks.dueDate)) {
             return -1;
         } else if (this.dueDate.before(tasks.dueDate)) {
