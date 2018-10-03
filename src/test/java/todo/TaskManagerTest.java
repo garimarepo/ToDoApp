@@ -3,6 +3,7 @@ package todo;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -34,6 +35,29 @@ public class TaskManagerTest {
     public void countFinishedTasks(){
         assertTrue(taskManager.countFinishedTasks()==1);
     }
+
+
+    @Test
+    public void tasksByProject() throws IOException, ClassNotFoundException {
+        assertTrue(taskManager.tasksByProject("history").size() == 2);
+    }
+
+    @Test
+    public void tasksByDate() {
+    }
+
+    @Test
+    public void changeStatus() {
+        taskManager.changeStatus(3);
+        assertTrue(taskManager.getTaskById(3).getStatus()==false);
+    }
+
+    @Test
+    public void removeTask() throws IOException, ClassNotFoundException {
+        taskManager.removeTask(2);
+        assertTrue(taskManager.getTaskById(2)==null);
+    }
+
 
 
 }

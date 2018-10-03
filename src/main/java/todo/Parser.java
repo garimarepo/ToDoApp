@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -20,7 +19,7 @@ public class Parser {
     private BufferedReader input;
     private TaskManager tasksManager;
 
-    public Parser() {
+    public Parser() throws IOException, ClassNotFoundException {
         input = new BufferedReader(new InputStreamReader(System.in));
         tasksManager = new TaskManager();
     }
@@ -62,7 +61,7 @@ public class Parser {
             case 4: {
                 tasksManager.saveToFile();
                 System.out.println("Your task has saved and here is the new list");
-                List<Task> tasks = tasksManager.displayTasksByDate();
+                List<Task> tasks = tasksManager.tasksByDate();
                 printTaskList(tasks);
                 break;
             }
@@ -70,7 +69,16 @@ public class Parser {
     }
 
     public int getUserOption() {
-        return Integer.parseInt(userInput());
+    int userOption=0;
+        try
+        {
+             userOption=Integer.parseInt(userInput());
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return userOption;
     }
 
     /**
@@ -81,12 +89,11 @@ public class Parser {
         System.out.println("By date OR by project");
         String input = userInput();
         if (input.equals("date")) {
-            printTaskList(tasksManager.displayTasksByDate());
+            printTaskList(tasksManager.tasksByDate());
         } else if (input.equals("project")) {
             System.out.println("Enter project name");
             String inputProject = userInput();
-            List<Task> tasks = tasksManager.displayTasksByProject(inputProject);
-            System.out.println("a");
+            List<Task> tasks = tasksManager.tasksByProject(inputProject);
             printTaskList(tasks);
         }
     }
@@ -128,18 +135,10 @@ public class Parser {
         System.out.println("Choose task(id) for mark as done");
         String markAsDoneInput = userInput();
         int id = Integer.parseInt(markAsDoneInput);
-        ArrayList<Task> tasks = tasksManager.getTasks();
-        Iterator it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = (Task) it.next();
-            if (id == task.getId()) {
-                task.setStatus(false);
-                break;
-            }
-        }
+        tasksManager.changeStatus(id);
         System.out.println("Your task is now mark as done that is changed the status from true to false" +
                 " and here is the new list");
-        printTaskList(tasksManager.displayTasksByDate());
+        printTaskList(tasksManager.tasksByDate());
     }
 
     /**
@@ -152,16 +151,9 @@ public class Parser {
         System.out.println("Choose task(id) for removing");
         String removeInput = userInput();
         int id = Integer.parseInt(removeInput);
-        ArrayList<Task> tasks = tasksManager.getTasks();
-        Iterator it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = (Task) it.next();
-            if (id == task.getId()) {
-                it.remove();
-            }
-        }
+        tasksManager.removeTask(id);
         System.out.println("Your task is removed. Now the new list is:");
-        printTaskList(tasksManager.displayTasksByDate());
+        printTaskList(tasksManager.tasksByDate());
     }
 
 
@@ -173,7 +165,7 @@ public class Parser {
         Task task = null;
         boolean idStatus = true;
         while (idStatus) {
-            task = getTaskById(id);
+            task = tasksManager.getTaskById(id);
             if (task == null) {
                 System.out.println("This Id does not exist. Please select an existing task(id) for update");
                 updateInput = userInput();
@@ -248,7 +240,6 @@ public class Parser {
         for (Task task : tasks) {
             printTask(task);
         }
-
     }
 
 
@@ -287,22 +278,11 @@ public class Parser {
         task.setStatus(status);
     }
 
-    private Task getTaskById(int id) {
-        ArrayList<Task> tasks = tasksManager.getTasks();
-        for (Task task : tasks) {
-            if (id == task.getId()) {
-                return task;
-            }
-        }
-        return null;
-    }
-
     /**
      * print details of task object.
      *
      * @param task The object for which the details are printed.
      */
-
     public void printTask(Task task) {
         System.out.println("------------------------------");
         System.out.println("Task Id: " + task.getId());
@@ -310,15 +290,12 @@ public class Parser {
         System.out.println("Title: " + task.getTitle());
         System.out.println("Due Date: " + task.getdueDate());
         System.out.println("Status: " + task.getStatus());
-
     }
 
     public void printTaskList(List<Task> tasks) {
         for (Task task : tasks) {
-
             printTask(task);
         }
-
     }
 }
 

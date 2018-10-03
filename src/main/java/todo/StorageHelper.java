@@ -22,6 +22,7 @@ public class StorageHelper {
         Path destination = Paths.get(STORAGE_LOCATION).toAbsolutePath();
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(destination.toString()));
         os.writeObject(taskStore);
+        os.close();
     }
 
     /**
@@ -29,16 +30,12 @@ public class StorageHelper {
      *
      * @return the list of file
      */
-    public TaskStore readFromFile() {
+    public TaskStore readFromFile() throws IOException, ClassNotFoundException {
         File source = new File(STORAGE_LOCATION);
-        try {
-            ObjectInputStream is = new ObjectInputStream(new FileInputStream(source));
-            TaskStore t = (TaskStore) is.readObject();
-            is.close();
-            return (t);
-        } catch (Exception e) {
-            System.out.println(e);
+        try(ObjectInputStream is = new ObjectInputStream(new FileInputStream(source))) {
+            return (TaskStore) is.readObject();
+        } catch (FileNotFoundException e) {
+            return new TaskStore();
         }
-        return new TaskStore();
     }
 }

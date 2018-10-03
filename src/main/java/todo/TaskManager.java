@@ -15,12 +15,13 @@ public class TaskManager {
     private TaskStore taskStore;
     private Iterator<Task> it;
 
-    public TaskManager() {
+    public TaskManager() throws IOException, ClassNotFoundException {
         storageHelper = new StorageHelper();
         taskStore = storageHelper.readFromFile();
     }
 
     public TaskManager(ArrayList<Task> tasks) {
+        taskStore = new TaskStore();
         this.taskStore.setTasks(tasks);
     }
 
@@ -50,7 +51,7 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public List<Task> displayTasksByProject(final String project) throws IOException, ClassNotFoundException {
+    public List<Task> tasksByProject(final String project) throws IOException, ClassNotFoundException {
         return taskStore.getTasks().stream().filter(task -> project.equals(task.getProject())).collect(Collectors.toList());
     }
 
@@ -60,7 +61,7 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public List<Task> displayTasksByDate() throws IOException, ClassNotFoundException {
+    public List<Task> tasksByDate() throws IOException, ClassNotFoundException {
         Collections.sort(taskStore.getTasks());
         return taskStore.getTasks();
     }
@@ -82,4 +83,48 @@ public class TaskManager {
     public void saveToFile() throws IOException {
         storageHelper.saveToFile(taskStore);
     }
+
+    public void changeStatus(int id)      {
+
+        ArrayList<Task> tasks = getTasks();
+        Iterator it = tasks.iterator();
+        while (it.hasNext()) {
+            Task task = (Task) it.next();
+            if (id == task.getId()) {
+                task.setStatus(true);
+                break;
+            }
+        }
+
+    }
+
+    public Task getTaskById(int id) {
+        ArrayList<Task> tasks = getTasks();
+        for (Task task : tasks) {
+            if (id == task.getId()) {
+                return task;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Remove the task corresponding to the selected id
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void removeTask(int id) throws IOException, ClassNotFoundException {
+        ArrayList<Task> tasks = getTasks();
+        Iterator it = tasks.iterator();
+        while (it.hasNext()) {
+            Task task = (Task) it.next();
+            if (id == task.getId()) {
+                it.remove();
+                break;
+            }
+        }
+    }
+
+
 }
