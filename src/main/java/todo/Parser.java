@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class Parser {
     private static final String WELCOME_MSG = "ToDoList: Choose an option";
     private BufferedReader input;
@@ -69,13 +68,10 @@ public class Parser {
     }
 
     public int getUserOption() {
-    int userOption=0;
-        try
-        {
-             userOption=Integer.parseInt(userInput());
-        }
-        catch(Exception e)
-        {
+        int userOption = 5;
+        try {
+            userOption = Integer.parseInt(userInput());
+        } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
         }
         return userOption;
@@ -89,11 +85,13 @@ public class Parser {
         System.out.println("By date OR by project");
         String input = userInput();
         if (input.equals("date")) {
+            System.out.println("The task list sorted by date is as follows:");
             printTaskList(tasksManager.tasksByDate());
         } else if (input.equals("project")) {
             System.out.println("Enter project name");
             String inputProject = userInput();
             List<Task> tasks = tasksManager.tasksByProject(inputProject);
+            System.out.println("The task list filtered by the project name is as follows:");
             printTaskList(tasks);
         }
     }
@@ -123,6 +121,7 @@ public class Parser {
         String inputStatus = userInput();
         boolean status = Boolean.valueOf(inputStatus);
         tasksManager.addNewTask(title, project, date, status);
+        System.out.println("For saving the task, you may press 4 now");
     }
 
     /**
@@ -131,10 +130,7 @@ public class Parser {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private void changeStatus() throws IOException, ClassNotFoundException {
-        System.out.println("Choose task(id) for mark as done");
-        String markAsDoneInput = userInput();
-        int id = Integer.parseInt(markAsDoneInput);
+    private void changeStatus(int id) throws IOException, ClassNotFoundException {
         tasksManager.changeStatus(id);
         System.out.println("Your task is now mark as done that is changed the status from true to false" +
                 " and here is the new list");
@@ -147,54 +143,63 @@ public class Parser {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private void removeTask() throws IOException, ClassNotFoundException {
-        System.out.println("Choose task(id) for removing");
-        String removeInput = userInput();
-        int id = Integer.parseInt(removeInput);
+    private void removeTask(int id) throws IOException, ClassNotFoundException {
         tasksManager.removeTask(id);
         System.out.println("Your task is removed. Now the new list is:");
         printTaskList(tasksManager.tasksByDate());
     }
 
+    /**
+     * Update the task's field corresponding to the id
+     *
+     * @param id the id of task to be updated
+     */
 
-    public void updateTask() {
-        displayAllTasks();
-        System.out.println("Choose task(id) for update");
-        String updateInput = userInput();
-        int id = Integer.parseInt(updateInput);
-        Task task = null;
-        boolean idStatus = true;
-        while (idStatus) {
-            task = tasksManager.getTaskById(id);
-            if (task == null) {
-                System.out.println("This Id does not exist. Please select an existing task(id) for update");
-                updateInput = userInput();
-                id = Integer.parseInt(updateInput);
-            } else {
-                break;
-            }
-        }
+    public void updateTask(int id) {
+        boolean status = false;
         System.out.println("Which field you want to update. Select 1 for title, 2 for project, 3 for due date, 4 for status");
         String updatefieldInput = userInput();
         int updatefieldInt = Integer.parseInt(updatefieldInput);
         switch (updatefieldInt) {
             case 1:
-                updateTitle(task);
+                System.out.println("Enter the new value for title");
+                String newtitle = userInput();
+                status = tasksManager.updateTaskTitle(id, newtitle);
                 break;
             case 2:
-                updateProject(task);
+                System.out.println("Enter the new value for project");
+                String newProject = userInput();
+                status = tasksManager.updateTaskProject(id, newProject);
                 break;
             case 3:
-                updateDueDate(task);
+                System.out.println("Enter the new value for due date");
+                Date newDate = null;
+                boolean dateStatus = true;
+                while (dateStatus) {
+                    try {
+                        String inputDate = userInput();
+                        newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
+                        dateStatus = false;
+                    } catch (java.text.ParseException e) {
+                        System.out.println("wrong format, please try again");
+                    }
+                }
+                status = tasksManager.updateTaskDueDate(id, newDate);
                 break;
             case 4:
-                updateStatus(task);
+                System.out.println("Enter status: false for complete and true for incomplete");
+                String inputStatus = userInput();
+                boolean projectStatus = Boolean.valueOf(inputStatus);
+                status = tasksManager.updateTaskStatus(id, projectStatus);
                 break;
         }
-        System.out.println("Updated the list and here is the new updated list");
-        displayAllTasks();
+        if (status) {
+            System.out.println("Updated the list and here is the new updated list");
+            displayAllTasks();
+        } else {
+            System.out.println("Please select an existing id");
+        }
     }
-
 
     /**
      * Edit the task. This may involve updating, marking it as done or removing
@@ -203,14 +208,17 @@ public class Parser {
      * @throws ClassNotFoundException
      */
     private void editTask() throws IOException, ClassNotFoundException {
-        System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
-        String editInput = userInput();
-        if (editInput.equals("1")) {
-            updateTask();
-        } else if (editInput.equals("2")) {
-            changeStatus();
-        } else if (editInput.equals("3")) {
-            removeTask();
+        int id = verifyId();
+        if (id != -1) {
+            System.out.println("Type 1 for update, 2 for mark as done and 3 for remove");
+            String editInput = userInput();
+            if (editInput.equals("1")) {
+                updateTask(id);
+            } else if (editInput.equals("2")) {
+                changeStatus(id);
+            } else if (editInput.equals("3")) {
+                removeTask(id);
+            }
         }
     }
 
@@ -226,56 +234,11 @@ public class Parser {
         return inputLine;
     }
 
-    private void unfinishedTasks() {
-        ArrayList<Task> tasks = tasksManager.getTasks();
-        for (Task task : tasks) {
-            if (task.getStatus() == false) {
-                printTask(task);
-            }
-        }
-    }
-
     private void displayAllTasks() {
         ArrayList<Task> tasks = tasksManager.getTasks();
         for (Task task : tasks) {
             printTask(task);
         }
-    }
-
-
-    private void updateTitle(Task task) {
-        System.out.println("Enter the new value for title");
-        String newtitle = userInput();
-        task.setTitle(newtitle);
-    }
-
-    private void updateProject(Task task) {
-        System.out.println("Enter the new value for project");
-        String newProject = userInput();
-        task.setProject(newProject);
-    }
-
-    private void updateDueDate(Task task) {
-        System.out.println("Enter the new value for due date");
-        Date newDate = null;
-        boolean dateStatus = true;
-        while (dateStatus) {
-            try {
-                String inputDate = userInput();
-                newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
-                dateStatus = false;
-            } catch (java.text.ParseException e) {
-                System.out.println("wrong format, please try again");
-            }
-        }
-        task.setdueDate(newDate);
-    }
-
-    private void updateStatus(Task task) {
-        System.out.println("Enter status: false for incomplete and true for complete");
-        String inputStatus = userInput();
-        boolean status = Boolean.valueOf(inputStatus);
-        task.setStatus(status);
     }
 
     /**
@@ -295,6 +258,38 @@ public class Parser {
     public void printTaskList(List<Task> tasks) {
         for (Task task : tasks) {
             printTask(task);
+        }
+    }
+
+    /**
+     * Verify the id, that is, the user should select an existing id
+     *
+     * @return an existing id, or -1 if not found the id.
+     */
+    public int verifyId() {
+        boolean found = false;
+        int id, count = 0;
+        do {
+            displayAllTasks();
+            System.out.println("Choose task(id) for update");
+            String updateInput = userInput();
+            id = Integer.parseInt(updateInput);
+            for (Task task : tasksManager.getTasks()) {
+                if (id == task.getId()) {
+                    found = true;
+                    count = 4;
+                    break;
+                }
+            }
+            if (found == false) {
+                System.out.println("Please select an existing id");
+                count++;
+            }
+        } while (count < 3);
+        if (count == 3) {
+            return -1;
+        } else {
+            return id;
         }
     }
 }

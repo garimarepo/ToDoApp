@@ -58,6 +58,11 @@ public class TaskManagerTest {
         assertTrue(taskManager.getTaskById(2)==null);
     }
 
+    @Test
+    public void getNewTaskId()
+    {
+        assertTrue(taskManager.getNewTaskId()==4);
+    }
 
 
 }

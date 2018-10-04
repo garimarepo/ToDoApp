@@ -7,7 +7,6 @@ package todo;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class StorageHelper {
     private final static String STORAGE_LOCATION = "Storage.txt";
@@ -32,7 +31,7 @@ public class StorageHelper {
      */
     public TaskStore readFromFile() throws IOException, ClassNotFoundException {
         File source = new File(STORAGE_LOCATION);
-        try(ObjectInputStream is = new ObjectInputStream(new FileInputStream(source))) {
+        try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(source))) {
             return (TaskStore) is.readObject();
         } catch (FileNotFoundException e) {
             return new TaskStore();

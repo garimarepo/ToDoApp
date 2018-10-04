@@ -11,6 +11,7 @@ public class App {
             p.printWelcome();
             int userOption = p.getUserOption();
             if (userOption == 5) {
+                System.out.println("Thanks for using the app. Bye");
                 return;
             }
             p.startProcessing(userOption);
