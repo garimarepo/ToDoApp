@@ -1,6 +1,7 @@
 package todo;
 
 import org.junit.Test;
+import todo.tasks.Task;
 
 import java.sql.Date;
 

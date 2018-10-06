@@ -2,6 +2,8 @@ package todo;
 
 import org.junit.Before;
 import org.junit.Test;
+import todo.tasks.Task;
+import todo.tasks.TaskManager;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -49,7 +51,7 @@ public class TaskManagerTest {
     @Test
     public void changeStatus() {
         taskManager.changeStatus(3);
-        assertTrue(taskManager.getTaskById(3).getStatus()==false);
+        assertTrue(taskManager.getTaskById(3).getStatus()==true);
     }
 
     @Test
@@ -58,11 +60,74 @@ public class TaskManagerTest {
         assertTrue(taskManager.getTaskById(2)==null);
     }
 
+
     @Test
-    public void getNewTaskId()
-    {
-        assertTrue(taskManager.getNewTaskId()==4);
+    public void tasksByProjectWhenProjectNotExist() throws IOException, ClassNotFoundException {
+        assertTrue(taskManager.tasksByProject("blah").size() == 0);
     }
 
+    @Test
+    public void countToDoTasksWhenNoTaskExist(){
+        ArrayList<Task> tasks=new ArrayList<>();
+        taskManager=new TaskManager(tasks);
+        assertTrue(taskManager.countToDoTasks()==0);
+    }
+
+    @Test
+    public void countFinishedTasksWhenNoTaskExist(){
+        ArrayList<Task> tasks=new ArrayList<>();
+        taskManager=new TaskManager(tasks);
+        assertTrue(taskManager.countFinishedTasks()==0);
+    }
+
+    @Test
+    public void updateTaskTitle(){
+        assertTrue(taskManager.updateTaskTitle(1,"speech")==true);
+    }
+
+    @Test
+    public void updateTaskTitleWhenNoTaskExist(){
+        assertTrue(taskManager.updateTaskTitle(5,"speech")==false);
+    }
+
+    @Test
+    public void updateTaskProject(){
+        assertTrue(taskManager.updateTaskProject(1,"math")==true);
+    }
+
+    @Test
+    public void updateTaskProjectWhenNoTaskExist(){
+        assertTrue(taskManager.updateTaskProject(5,"math")==false);
+    }
+
+    @Test
+    public void updateTaskDueDate(){
+        assertTrue(taskManager.updateTaskDueDate(1,Date.valueOf("2018-12-11"))==true);
+    }
+
+    @Test
+    public void updateTaskDueDateWhenNoTaskExist(){
+        assertTrue(taskManager.updateTaskDueDate(5, Date.valueOf("2018-12-11"))==false);
+    }
+
+    @Test
+    public void updateTaskStatus(){
+        assertTrue(taskManager.updateTaskStatus(1,true)==true);
+    }
+
+    @Test
+    public void updateTaskStatusWhenNoTaskExist(){
+        assertTrue(taskManager.updateTaskStatus(5,true)==false);
+    }
+
+    @Test
+    public void getTaskById(){
+        assertTrue(taskManager.getTaskById(1).getId() == 1);
+    }
+
+    @Test
+    public void getTaskByIdWhenNoTaskExist(){
+        assertTrue(taskManager.getTaskById(9) == null);
+    }
 
 }

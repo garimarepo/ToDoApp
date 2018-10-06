@@ -3,7 +3,9 @@
  * It shows output to the user according to his selection.
  */
 
-package todo;
+package todo.tasks;
+
+import todo.storage.StorageHelper;
 
 import java.io.IOException;
 import java.util.*;

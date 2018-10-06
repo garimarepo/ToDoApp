@@ -2,7 +2,9 @@
  * Task persistence class.
  */
 
-package todo;
+package todo.storage;
+
+import todo.tasks.TaskStore;
 
 import java.io.*;
 import java.nio.file.Path;
