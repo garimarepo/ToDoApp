@@ -2,8 +2,6 @@ package todo;
 
 import org.junit.Before;
 import org.junit.Test;
-import todo.tasks.Task;
-import todo.tasks.TaskManager;
 
 import java.io.IOException;
 import java.sql.Date;

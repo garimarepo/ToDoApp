@@ -1,9 +1,10 @@
-package todo.tasks;
+package todo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TaskStore implements Serializable {
+    private static final long serialVersionUID = 6529685098267757691L;
     private ArrayList<Task> tasks;
     private int maxId;
 

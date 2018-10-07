@@ -4,9 +4,6 @@
 
 package todo;
 
-import todo.tasks.Task;
-import todo.tasks.TaskManager;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,6 +64,8 @@ public class Parser {
                 printTaskList(tasks);
                 break;
             }
+            //default:
+
         }
     }
 

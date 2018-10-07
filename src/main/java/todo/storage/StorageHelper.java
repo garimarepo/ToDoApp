@@ -4,7 +4,7 @@
 
 package todo.storage;
 
-import todo.tasks.TaskStore;
+import todo.TaskStore;
 
 import java.io.*;
 import java.nio.file.Path;
