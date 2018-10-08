@@ -33,3 +33,14 @@ The user can remove the task by task id
 
 * You can quit the application anytime by choosing option number 5.
     
+# Build Project
+1. [Install maven](https://maven.apache.org/download.cgi)
+2. Build project 
+   * mvn compile
+3. Create executable jar
+   * mvn package
+
+# Run application
+Create executable jar as described in Build Project. Run application using following command
+* java -jar todo-1.0-SNAPSHOT-shaded.jar
+ 
