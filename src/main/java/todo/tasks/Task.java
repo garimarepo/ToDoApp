@@ -2,7 +2,7 @@
  * This class represents a single task in ToDoApp.
  */
 
-package todo;
+package todo.tasks;
 
 import java.io.Serializable;
 import java.util.Date;
