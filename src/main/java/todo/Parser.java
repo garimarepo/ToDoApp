@@ -87,7 +87,7 @@ public class Parser {
      * @throws ClassNotFoundException
      */
     private void showTask() throws IOException, ClassNotFoundException {
-        System.out.println("By date OR by project");
+        System.out.println("Type date(for sorted task list by date) and type project(for filtered by the project name)");
         String input = userInput();
         if (input.equals("date")) {
             System.out.println("The task list sorted by date is as follows:");
@@ -98,6 +98,8 @@ public class Parser {
             List<Task> tasks = tasksManager.tasksByProject(inputProject);
             System.out.println("The task list filtered by the project name is as follows:");
             printTaskList(tasks);
+        }
+        else{System.out.println("Type either date OR project for show task list");
         }
     }
 
@@ -114,7 +116,7 @@ public class Parser {
         Date date = null;
         while (true) {
             try {
-                System.out.println("Enter Due Date");
+                System.out.println("Enter Due Date dd/mm/yyyy");
                 String inputDate = userInput();
                 date = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
                 break;
@@ -122,10 +124,19 @@ public class Parser {
                 System.out.println("wrong format, please try again");
             }
         }
-        System.out.println("Enter status: false for incomplete and true for complete");
-        String inputStatus = userInput();
-        boolean status = Boolean.valueOf(inputStatus);
-        tasksManager.addNewTask(title, project, date, status);
+        boolean wrongValue = true;
+        while (wrongValue) {
+            System.out.println("Enter status: false for incomplete and true for complete");
+            String inputStatus = userInput();
+            if (inputStatus.equals("true") || inputStatus.equals("false")) {
+                boolean status = Boolean.valueOf(inputStatus);
+                tasksManager.addNewTask(title, project, date, status);
+                wrongValue = false;
+            } else {
+                System.out.println("Please specify either true or false");
+            }
+
+        }
         System.out.println("For saving the task, you may press 4 now");
     }
 
@@ -137,7 +148,7 @@ public class Parser {
      */
     private void changeStatus(int id) throws IOException, ClassNotFoundException {
         tasksManager.changeStatus(id);
-        System.out.println("Your task is now mark as done that is changed the status from true to false" +
+        System.out.println("Your task is now mark as done that is changed the status from false to true " +
                 " and here is the new list");
         printTaskList(tasksManager.tasksByDate());
     }
@@ -162,47 +173,68 @@ public class Parser {
 
     public void updateTask(int id) {
         boolean status = false;
-        System.out.println("Which field you want to update. Select 1 for title, 2 for project, 3 for due date, 4 for status");
-        String updatefieldInput = userInput();
-        int updatefieldInt = Integer.parseInt(updatefieldInput);
-        switch (updatefieldInt) {
-            case 1:
-                System.out.println("Enter the new value for title");
-                String newtitle = userInput();
-                status = tasksManager.updateTaskTitle(id, newtitle);
-                break;
-            case 2:
-                System.out.println("Enter the new value for project");
-                String newProject = userInput();
-                status = tasksManager.updateTaskProject(id, newProject);
-                break;
-            case 3:
-                System.out.println("Enter the new value for due date");
-                Date newDate = null;
-                boolean dateStatus = true;
-                while (dateStatus) {
-                    try {
-                        String inputDate = userInput();
-                        newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
-                        dateStatus = false;
-                    } catch (java.text.ParseException e) {
-                        System.out.println("wrong format, please try again");
+        boolean option = true;
+        while (option) {
+            System.out.println("Which field you want to update. Select 1 for title, 2 for project, 3 for due date, 4 for status");
+            String updatefieldInput = userInput();
+            int updatefieldInt = Integer.parseInt(updatefieldInput);
+            switch (updatefieldInt) {
+                case 0:
+                    printWelcome();
+                    return;
+                case 1:
+                    System.out.println("Enter the new value for title");
+                    String newtitle = userInput();
+                    status = tasksManager.updateTaskTitle(id, newtitle);
+                    break;
+                case 2:
+                    System.out.println("Enter the new value for project");
+                    String newProject = userInput();
+                    status = tasksManager.updateTaskProject(id, newProject);
+                    break;
+                case 3:
+                    System.out.println("Enter the new value for due date (dd/MM/yyyy)");
+                    Date newDate = null;
+                    boolean dateStatus = true;
+                    while (dateStatus) {
+                        try {
+                            String inputDate = userInput();
+                            newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
+                            dateStatus = false;
+                        } catch (java.text.ParseException e) {
+                            System.out.println("Wrong format, should be (dd/MM/yyyy), please try again");
+                        }
                     }
-                }
-                status = tasksManager.updateTaskDueDate(id, newDate);
-                break;
-            case 4:
-                System.out.println("Enter status: false for complete and true for incomplete");
-                String inputStatus = userInput();
-                boolean projectStatus = Boolean.valueOf(inputStatus);
-                status = tasksManager.updateTaskStatus(id, projectStatus);
-                break;
-        }
-        if (status) {
-            System.out.println("Updated the list and here is the new updated list");
-            displayAllTasks();
-        } else {
-            System.out.println("Please select an existing id");
+                    status = tasksManager.updateTaskDueDate(id, newDate);
+                    break;
+                case 4:
+                    boolean wrongValue = true;
+                    while(wrongValue) {
+                        System.out.println("Enter status: false for incomplete and true for complete");
+                        String inputStatus = userInput();
+                        if (inputStatus.equals("true") || inputStatus.equals("false")) {
+                            boolean projectStatus = Boolean.valueOf(inputStatus);
+                            status = tasksManager.updateTaskStatus(id, projectStatus);
+                            wrongValue = false;
+                        } else {
+                            System.out.println("Please specify either true or false");
+                        }
+                    }
+                    break;
+                default:
+                    option = false;
+                    break;
+            }
+            if (status) {
+                System.out.println("Updated the list and here is the new updated list");
+                displayAllTasks();
+                option = false;
+            }
+            else
+            {
+                System.out.println("If you want to see the options again press 0 otherwise");
+                option = true;
+            }
         }
     }
 
@@ -224,6 +256,7 @@ public class Parser {
             } else if (editInput.equals("3")) {
                 removeTask(id);
             }
+            else{System.out.println("Please Type 1 for update, 2 for mark as done and 3 for remove in Edit Task option");}
         }
     }
 
@@ -296,6 +329,21 @@ public class Parser {
         } else {
             return id;
         }
+    }
+
+    public void verifyStatus()
+    {
+        boolean wrongValue = true;
+        while(wrongValue) {
+            System.out.println("Enter status: false for incomplete and true for complete");
+            String inputStatus = userInput();
+            if (inputStatus.equals("true") || inputStatus.equals("false")) {
+                wrongValue = false;
+            }
+        } else {
+        System.out.println("Please specify either true or false");
+    }
+    }
     }
 }
 

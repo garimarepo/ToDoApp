@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class TaskManager {
+public class  TaskManager {
     private StorageHelper storageHelper;
     private TaskStore taskStore;
     //private Iterator<Task> it;
@@ -161,7 +161,7 @@ public class TaskManager {
     public void changeStatus(int id) {
 
         ArrayList<Task> tasks = getTasks();
-        Iterator it = tasks.iterator();
+        Iterator<Task> it = tasks.iterator();
         while (it.hasNext()) {
             Task task = (Task) it.next();
             if (id == task.getId()) {
