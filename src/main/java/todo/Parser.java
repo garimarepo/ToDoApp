@@ -18,8 +18,8 @@ import java.util.List;
 
 public class Parser {
     private static final String WELCOME_MSG = "ToDoList: Choose an option";
+    public TaskManager tasksManager;
     private BufferedReader input;
-    private TaskManager tasksManager;
 
     public Parser() throws IOException, ClassNotFoundException {
         input = new BufferedReader(new InputStreamReader(System.in));
@@ -37,8 +37,7 @@ public class Parser {
             System.out.println("(1) Show Task List (by date or project)");
             System.out.println("(2) Add New Task");
             System.out.println("(3) Edit Task (update, mark as done, remove)");
-            System.out.println("(4) Save");
-            System.out.println("(5) Quit");
+            System.out.println("(4) Save and Quit");
         }
     }
 
@@ -62,18 +61,14 @@ public class Parser {
                 break;
             case 4: {
                 tasksManager.saveToFile();
-                System.out.println("Your task has saved and here is the new list");
-                List<Task> tasks = tasksManager.tasksByDate();
-                printTaskList(tasks);
-                break;
+                System.out.println("Your task has saved and thanks for using the app. Bye");
+                return;
             }
-            //default:
-
         }
     }
 
     public int getUserOption() {
-        int userOption = 5;
+        int userOption = 4;
         try {
             userOption = Integer.parseInt(userInput());
         } catch (NumberFormatException e) {
@@ -82,10 +77,6 @@ public class Parser {
         return userOption;
     }
 
-    /**
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
     private void showTask() throws IOException, ClassNotFoundException {
         System.out.println("Type date(for sorted task list by date) and type project(for filtered by the project name)");
         String input = userInput();
@@ -98,8 +89,8 @@ public class Parser {
             List<Task> tasks = tasksManager.tasksByProject(inputProject);
             System.out.println("The task list filtered by the project name is as follows:");
             printTaskList(tasks);
-        }
-        else{System.out.println("Type either date OR project for show task list");
+        } else {
+            System.out.println("Type either date OR project for show task list");
         }
     }
 
@@ -113,7 +104,7 @@ public class Parser {
         String title = userInput();
         System.out.println("Enter project");
         String project = userInput();
-        Date date = null;
+        Date date;
         while (true) {
             try {
                 System.out.println("Enter Due Date dd/mm/yyyy");
@@ -124,24 +115,12 @@ public class Parser {
                 System.out.println("wrong format, please try again");
             }
         }
-        boolean wrongValue = true;
-        while (wrongValue) {
-            System.out.println("Enter status: false for incomplete and true for complete");
-            String inputStatus = userInput();
-            if (inputStatus.equals("true") || inputStatus.equals("false")) {
-                boolean status = Boolean.valueOf(inputStatus);
-                tasksManager.addNewTask(title, project, date, status);
-                wrongValue = false;
-            } else {
-                System.out.println("Please specify either true or false");
-            }
-
-        }
-        System.out.println("For saving the task, you may press 4 now");
+        boolean status = verifyStatus();
+        tasksManager.addNewTask(title, project, date, status);
     }
 
     /**
-     * Change the status of a task to false that is mark as done
+     * Change the status of a task to true that is mark as done
      *
      * @throws IOException
      * @throws ClassNotFoundException
@@ -176,8 +155,7 @@ public class Parser {
         boolean option = true;
         while (option) {
             System.out.println("Which field you want to update. Select 1 for title, 2 for project, 3 for due date, 4 for status");
-            String updatefieldInput = userInput();
-            int updatefieldInt = Integer.parseInt(updatefieldInput);
+            int updatefieldInt = getUserOption();
             switch (updatefieldInt) {
                 case 0:
                     printWelcome();
@@ -208,30 +186,15 @@ public class Parser {
                     status = tasksManager.updateTaskDueDate(id, newDate);
                     break;
                 case 4:
-                    boolean wrongValue = true;
-                    while(wrongValue) {
-                        System.out.println("Enter status: false for incomplete and true for complete");
-                        String inputStatus = userInput();
-                        if (inputStatus.equals("true") || inputStatus.equals("false")) {
-                            boolean projectStatus = Boolean.valueOf(inputStatus);
-                            status = tasksManager.updateTaskStatus(id, projectStatus);
-                            wrongValue = false;
-                        } else {
-                            System.out.println("Please specify either true or false");
-                        }
-                    }
-                    break;
-                default:
-                    option = false;
+                    boolean projectStatus = verifyStatus();
+                    status = tasksManager.updateTaskStatus(id, projectStatus);
                     break;
             }
             if (status) {
                 System.out.println("Updated the list and here is the new updated list");
                 displayAllTasks();
                 option = false;
-            }
-            else
-            {
+            } else {
                 System.out.println("If you want to see the options again press 0 otherwise");
                 option = true;
             }
@@ -255,8 +218,9 @@ public class Parser {
                 changeStatus(id);
             } else if (editInput.equals("3")) {
                 removeTask(id);
+            } else {
+                System.out.println("Please Type 1 for update, 2 for mark as done and 3 for remove in Edit Task option");
             }
-            else{System.out.println("Please Type 1 for update, 2 for mark as done and 3 for remove in Edit Task option");}
         }
     }
 
@@ -307,6 +271,8 @@ public class Parser {
     public int verifyId() {
         boolean found = false;
         int id, count = 0;
+        final int BEYOND_MAX_ATTEMPT = 4;
+        final int MAX_ATTEMPT = 3;
         do {
             displayAllTasks();
             System.out.println("Choose task(id) for update");
@@ -315,7 +281,7 @@ public class Parser {
             for (Task task : tasksManager.getTasks()) {
                 if (id == task.getId()) {
                     found = true;
-                    count = 4;
+                    count = BEYOND_MAX_ATTEMPT;
                     break;
                 }
             }
@@ -323,28 +289,36 @@ public class Parser {
                 System.out.println("Please select an existing id");
                 count++;
             }
-        } while (count < 3);
-        if (count == 3) {
+        } while (count < MAX_ATTEMPT);
+        if (count == MAX_ATTEMPT) {
             return -1;
         } else {
             return id;
         }
     }
 
-    public void verifyStatus()
-    {
+    /**
+     * Verifying the status value i.e. it should be either true or false.
+     * If not,then interrupts user.
+     *
+     * @return
+     */
+
+    public boolean verifyStatus() {
         boolean wrongValue = true;
-        while(wrongValue) {
+        while (wrongValue) {
             System.out.println("Enter status: false for incomplete and true for complete");
             String inputStatus = userInput();
             if (inputStatus.equals("true") || inputStatus.equals("false")) {
-                wrongValue = false;
+                boolean projectStatus = Boolean.valueOf(inputStatus);
+                return projectStatus;
+            } else {
+                System.out.println("Please specify either true or false");
             }
-        } else {
-        System.out.println("Please specify either true or false");
-    }
-    }
+        }
+        return true;
     }
 }
+
 
 

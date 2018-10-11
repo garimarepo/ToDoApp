@@ -12,10 +12,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class  TaskManager {
+public class TaskManager {
     private StorageHelper storageHelper;
     private TaskStore taskStore;
-    //private Iterator<Task> it;
 
     public TaskManager() throws IOException, ClassNotFoundException {
         storageHelper = new StorageHelper();
@@ -159,17 +158,15 @@ public class  TaskManager {
      * @param id the id of task to be updated to value true
      */
     public void changeStatus(int id) {
-
         ArrayList<Task> tasks = getTasks();
         Iterator<Task> it = tasks.iterator();
         while (it.hasNext()) {
-            Task task = (Task) it.next();
+            Task task = it.next();
             if (id == task.getId()) {
                 task.setStatus(true);
                 break;
             }
         }
-
     }
 
     /**
@@ -197,9 +194,9 @@ public class  TaskManager {
      */
     public void removeTask(int id) throws IOException, ClassNotFoundException {
         ArrayList<Task> tasks = getTasks();
-        Iterator it = tasks.iterator();
+        Iterator<Task> it = tasks.iterator();
         while (it.hasNext()) {
-            Task task = (Task) it.next();
+            Task task =  it.next();
             if (id == task.getId()) {
                 it.remove();
                 break;

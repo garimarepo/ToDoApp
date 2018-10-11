@@ -1,3 +1,6 @@
+/**
+ * Models the object for storage in file with unique Id generation for each object.
+ */
 package todo.tasks;
 
 import java.io.Serializable;
