@@ -158,14 +158,9 @@ public class TaskManager {
      * @param id the id of task to be updated to value true
      */
     public void changeStatus(int id) {
-        ArrayList<Task> tasks = getTasks();
-        Iterator<Task> it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task = it.next();
-            if (id == task.getId()) {
-                task.setStatus(true);
-                break;
-            }
+        Task task = getTaskById(id);
+        if (task != null) {
+            task.setStatus(true);
         }
     }
 
@@ -193,16 +188,7 @@ public class TaskManager {
      * @throws ClassNotFoundException
      */
     public void removeTask(int id) throws IOException, ClassNotFoundException {
-        ArrayList<Task> tasks = getTasks();
-        Iterator<Task> it = tasks.iterator();
-        while (it.hasNext()) {
-            Task task =  it.next();
-            if (id == task.getId()) {
-                it.remove();
-                break;
-            }
-        }
+        Task task = getTaskById(id);
+        getTasks().remove(task);
     }
-
-
 }
