@@ -7,12 +7,11 @@ public class App {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         Parser p = new Parser();
+        int userOption = 0;
         do {
             p.printWelcome();
-            int userOption = p.getUserOption();
-            if(userOption == 4)
-                break;
+            userOption = p.getUserOption();
             p.startProcessing(userOption);
-        } while (true);
+        } while (userOption != 4);
     }
 }
