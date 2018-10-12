@@ -8,7 +8,10 @@ package todo.tasks;
 import todo.storage.StorageHelper;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +55,7 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public List<Task> tasksByProject(final String project) throws IOException, ClassNotFoundException {
+    public List<Task> tasksByProject(final String project) {
         return taskStore.getTasks().stream().filter(task -> project.equals(task.getProject())).collect(Collectors.toList());
     }
 
@@ -62,7 +65,7 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public List<Task> tasksByDate() throws IOException, ClassNotFoundException {
+    public List<Task> tasksByDate() {
         Collections.sort(taskStore.getTasks());
         return taskStore.getTasks();
     }
@@ -187,7 +190,7 @@ public class TaskManager {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void removeTask(int id) throws IOException, ClassNotFoundException {
+    public void removeTask(int id) {
         Task task = getTaskById(id);
         getTasks().remove(task);
     }

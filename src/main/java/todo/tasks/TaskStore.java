@@ -28,7 +28,4 @@ public class TaskStore implements Serializable {
         return maxId++;
     }
 
-    public void setMaxId(int maxId) {
-        this.maxId = maxId;
-    }
 }

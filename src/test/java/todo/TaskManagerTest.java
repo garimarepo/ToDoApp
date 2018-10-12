@@ -40,13 +40,10 @@ public class TaskManagerTest {
 
 
     @Test
-    public void tasksByProject() throws IOException, ClassNotFoundException {
+    public void tasksByProject() {
         assertTrue(taskManager.tasksByProject("history").size() == 2);
     }
 
-    @Test
-    public void tasksByDate() {
-    }
 
     @Test
     public void changeStatus() {
@@ -55,14 +52,14 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void removeTask() throws IOException, ClassNotFoundException {
+    public void removeTask() {
         taskManager.removeTask(2);
         assertTrue(taskManager.getTaskById(2)==null);
     }
 
 
     @Test
-    public void tasksByProjectWhenProjectNotExist() throws IOException, ClassNotFoundException {
+    public void tasksByProjectWhenProjectNotExist() {
         assertTrue(taskManager.tasksByProject("blah").size() == 0);
     }
 

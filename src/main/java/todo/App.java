@@ -7,9 +7,11 @@ public class App {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         Parser p = new Parser();
-        int userOption = 0;
+        int userOption;
         do {
             p.printWelcome();
+            System.out.println();
+            System.out.print("Enter choice : ");
             userOption = p.getUserOption();
             p.startProcessing(userOption);
         } while (userOption != 4);
