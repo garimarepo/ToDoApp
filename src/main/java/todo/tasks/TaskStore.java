@@ -1,5 +1,5 @@
 /**
- * Models the object for storage in file with unique Id generation for each object.
+ * Represents the object for storage in file with unique Id generation for each object.
  */
 package todo.tasks;
 

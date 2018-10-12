@@ -40,12 +40,12 @@ public class Task implements Serializable, Comparable<Task> {
         this.project = project;
     }
 
-    public void setdueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public Date getDueDate() {
+        return dueDate;
     }
 
-    public Date getdueDate() {
-        return dueDate;
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     public boolean getStatus() {
@@ -58,10 +58,6 @@ public class Task implements Serializable, Comparable<Task> {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**

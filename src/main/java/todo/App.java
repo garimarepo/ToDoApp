@@ -1,11 +1,10 @@
 package todo;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 public class App {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Parser p = new Parser();
         int userOption;
         do {

@@ -52,8 +52,7 @@ public class TaskManager {
      * Filter tasks based on project name
      *
      * @param project the name of project
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @return list of tasks of the project
      */
     public List<Task> tasksByProject(final String project) {
         return taskStore.getTasks().stream().filter(task -> project.equals(task.getProject())).collect(Collectors.toList());
@@ -62,8 +61,7 @@ public class TaskManager {
     /**
      * Shows all the tasks sorted by date
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @return list of tasks sorted by date
      */
     public List<Task> tasksByDate() {
         Collections.sort(taskStore.getTasks());
@@ -75,7 +73,7 @@ public class TaskManager {
      *
      * @param id    the id of the task to be updated with new title
      * @param title the new value of title
-     * @return
+     * @return true if found the task with the id otherwise returns false
      */
 
     public boolean updateTaskTitle(int id, String title) {
@@ -93,7 +91,7 @@ public class TaskManager {
      *
      * @param id      the id of the task to be updated with new project name
      * @param project the new value of project name
-     * @return
+     * @return true if found the task with the id otherwise returns false
      */
     public boolean updateTaskProject(int id, String project) {
         Task task = getTaskById(id);
@@ -110,12 +108,12 @@ public class TaskManager {
      *
      * @param id      the id of the task to be updated with new due date
      * @param dueDate the new value of due date
-     * @return
+     * @return true if found the task with the id otherwise returns false
      */
     public boolean updateTaskDueDate(int id, Date dueDate) {
         Task task = getTaskById(id);
         if (task != null) {
-            task.setdueDate(dueDate);
+            task.setDueDate(dueDate);
             return true;
         } else {
             return false;
@@ -127,7 +125,7 @@ public class TaskManager {
      *
      * @param id     the id of the task to be updated with new status
      * @param status the new value of status
-     * @return
+     * @return true if found the task with the id otherwise returns false
      */
     public boolean updateTaskStatus(int id, boolean status) {
         Task task = getTaskById(id);
@@ -187,8 +185,7 @@ public class TaskManager {
     /**
      * Remove the task corresponding to the selected id
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param id of task to be removed
      */
     public void removeTask(int id) {
         Task task = getTaskById(id);

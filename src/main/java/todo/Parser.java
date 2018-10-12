@@ -61,7 +61,7 @@ public class Parser {
                 break;
             case 4: {
                 tasksManager.saveToFile();
-                System.out.println("Your task has saved and thanks for using the app. Bye");
+                System.out.println("Your task list is saved and thanks for using the app. Bye");
                 return;
             }
         }
@@ -125,6 +125,8 @@ public class Parser {
             }
             tasksManager.addNewTask(title, project, newDate, projectStatus);
         }
+        System.out.println("Successfully added the task to the list and here is the new list:");
+        printTaskList(tasksManager.tasksByDate());
     }
 
     /**
@@ -143,7 +145,7 @@ public class Parser {
     private void removeTask(int id) {
         tasksManager.removeTask(id);
         System.out.println("Task removed!!!");
-        System.out.println("Task List:");
+        System.out.println("Now The Task List is:");
         printTaskList(tasksManager.tasksByDate());
     }
 
@@ -162,8 +164,8 @@ public class Parser {
             System.out.println("2) Project");
             System.out.println("3) Due date");
             System.out.println("4) Status");
-            int updatefieldInt = getUserOption();
-            switch (updatefieldInt) {
+            int updateField = getUserOption();
+            switch (updateField) {
                 case 0:
                     return;
                 case 1:
@@ -200,7 +202,7 @@ public class Parser {
                 displayAllTasks();
                 option = false;
             } else {
-                System.out.println("OR If you want to see the options again press 0 otherwise continue");
+                System.out.println(" If you want to see the options again press 0 otherwise continue");
                 option = true;
             }
         }
@@ -258,7 +260,7 @@ public class Parser {
         System.out.println("Task Id: " + task.getId());
         System.out.println("Project: " + task.getProject());
         System.out.println("Title: " + task.getTitle());
-        System.out.println("Due Date: " + task.getdueDate());
+        System.out.println("Due Date: " + task.getDueDate());
         System.out.println("Status: " + task.getStatus());
     }
 
@@ -274,7 +276,7 @@ public class Parser {
 
     /**
      * Verify the id, that is, the user should select an existing id
-     * Gives user a maximum of two attempts if he gives wrong input.
+     * Gives user a maximum of two attempts if he provides wrong input.
      *
      * @return an existing id, or -1 if not found the id.
      */
@@ -303,7 +305,7 @@ public class Parser {
 
     /**
      * Verifying the status value i.e. it should be either true or false.
-     * Gives user a maximum of two attempts if he enters wrong.
+     * Gives user a maximum of two attempts if he enters wrong input.
      *
      * @return 1 for true, 0 for false and -1 for invalid value.
      */
@@ -312,7 +314,7 @@ public class Parser {
         int count = 1;
         final int MAX_ATTEMPT = 2;
         while (count <= MAX_ATTEMPT) {
-            System.out.print("Enter status (false/true) : ");
+            System.out.print("Enter status (false/true) : false for incomplete task, true for completed task ");
             String inputStatus = userInput();
             if (inputStatus.equals("true")) {
                 return 1;
@@ -331,7 +333,7 @@ public class Parser {
      * Verifies the date format
      * Gives user a maximum of two attempts if he enters wrong input
      *
-     * @return date in correct format otherwise null value
+     * @return date in correct format otherwise returns null value
      */
     public Date verifyDueDateFormat() {
         System.out.println("Enter the new value for due date (dd/MM/yyyy)");
