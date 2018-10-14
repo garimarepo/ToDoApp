@@ -11,13 +11,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Parser {
     public TaskManager tasksManager;
     private BufferedReader input;
+    final int MAX_ATTEMPT = 2;
 
     public Parser() throws IOException, ClassNotFoundException {
         input = new BufferedReader(new InputStreamReader(System.in));
@@ -30,8 +30,8 @@ public class Parser {
             System.out.println("*****************************************************");
             System.out.println();
             System.out.println("--------------------Tasks Summary--------------------");
-            System.out.println("Todo Tasks : " + tasksManager.countToDoTasks());
-            System.out.println("Completed Tasks : " + tasksManager.countFinishedTasks());
+            System.out.println("Todo Tasks : " + tasksManager.countTasks(false));
+            System.out.println("Completed Tasks : " + tasksManager.countTasks(true));
             System.out.println("-----------------------------------------------------");
             System.out.println();
             System.out.println("Menu");
@@ -64,17 +64,20 @@ public class Parser {
                 System.out.println("Your task list is saved and thanks for using the app. Bye");
                 return;
             }
+            default:
+                System.out.println("Invalid input");
         }
+        System.out.println("Press enter to continue ...");
+        userInput();
     }
 
     public int getUserOption() {
-        int userOption = 4;
         try {
-            userOption = Integer.parseInt(userInput());
+            return Integer.parseInt(userInput());
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
         }
-        return userOption;
+        return -1;
     }
 
     private void showTask() {
@@ -89,7 +92,7 @@ public class Parser {
             System.out.println("Task sorted by due date:");
             printTaskList(tasksManager.tasksByDate());
         } else if (input == 2) {
-            System.out.println("Enter project name");
+            System.out.print("Enter project name");
             String inputProject = userInput();
             List<Task> tasks = tasksManager.tasksByProject(inputProject);
             System.out.println("Tasks filtered by project:");
@@ -155,7 +158,7 @@ public class Parser {
      * @param id the id of task to be updated
      */
 
-    public void updateTask(int id) {
+    private void updateTask(int id) {
         boolean status = false;
         boolean option = true;
         while (option) {
@@ -196,10 +199,12 @@ public class Parser {
                         status = tasksManager.updateTaskStatus(id, projectStatus);
                     }
                     break;
+                default:
+                    System.out.println("Invalid option");
             }
             if (status) {
                 System.out.println("Updated the list and here is the new updated list");
-                displayAllTasks();
+                printTaskList(tasksManager.getTasks());
                 option = false;
             } else {
                 System.out.println(" If you want to see the options again press 0 otherwise continue");
@@ -233,7 +238,7 @@ public class Parser {
 
     private String userInput() {
         String inputLine;
-        System.out.print("> ");
+        //System.out.print("> ");
         inputLine = null;
         try {
             inputLine = input.readLine();
@@ -241,13 +246,6 @@ public class Parser {
             System.out.println("Error: " + e.getMessage());
         }
         return inputLine;
-    }
-
-    private void displayAllTasks() {
-        ArrayList<Task> tasks = tasksManager.getTasks();
-        for (Task task : tasks) {
-            printTask(task);
-        }
     }
 
     /**
@@ -264,7 +262,7 @@ public class Parser {
         System.out.println("Status: " + task.getStatus());
     }
 
-    public void printTaskList(List<Task> tasks) {
+    private void printTaskList(List<Task> tasks) {
         System.out.println();
         System.out.println("----------Task List Begin-----------");
         for (Task task : tasks) {
@@ -280,16 +278,14 @@ public class Parser {
      *
      * @return an existing id, or -1 if not found the id.
      */
-    public int verifyId() {
+    private int verifyId() {
         boolean found = false;
         int count = 1;
         int id;
-        final int MAX_ATTEMPT = 2;
         while (count <= MAX_ATTEMPT) {
-            displayAllTasks();
-            System.out.println("Enter Task(id) for update: ");
-            String updateInput = userInput();
-            id = Integer.parseInt(updateInput);
+            printTaskList(tasksManager.getTasks());
+            System.out.print("Enter Task(id) for update: ");
+            id = getUserOption();
             for (Task task : tasksManager.getTasks()) {
                 if (id == task.getId()) {
                     return id;
@@ -310,11 +306,10 @@ public class Parser {
      * @return 1 for true, 0 for false and -1 for invalid value.
      */
 
-    public int verifyStatus() {
+    private int verifyStatus() {
         int count = 1;
-        final int MAX_ATTEMPT = 2;
         while (count <= MAX_ATTEMPT) {
-            System.out.print("Enter status (false/true) : false for incomplete task, true for completed task ");
+            System.out.print("Enter status false for incomplete task, true for completed task: ");
             String inputStatus = userInput();
             if (inputStatus.equals("true")) {
                 return 1;
@@ -326,7 +321,6 @@ public class Parser {
             }
         }
         return -1;
-
     }
 
     /**
@@ -335,23 +329,23 @@ public class Parser {
      *
      * @return date in correct format otherwise returns null value
      */
-    public Date verifyDueDateFormat() {
+    private Date verifyDueDateFormat() {
         System.out.println("Enter the new value for due date (dd/MM/yyyy)");
         Date newDate = null;
         int count = 1;
-        final int MAX_ATTEMPT = 2;
         while (count <= MAX_ATTEMPT) {
             try {
                 String inputDate = userInput();
                 newDate = new SimpleDateFormat("dd/MM/yyyy").parse(inputDate);
-                break;
+                if(newDate.before(new Date())) {
+                    System.out.println("Oops! due date can't be in past. Please try again.");
+                } else {
+                    return newDate;
+                }
             } catch (java.text.ParseException e) {
-                System.out.println("Wrong format, should be (dd/MM/yyyy), please try again");
-                count++;
+                System.out.println("Wrong format, should be (dd/MM/yyyy). Please try again");
             }
-        }
-        if (count <= MAX_ATTEMPT) {
-            return newDate;
+            count++;
         }
         return null;
     }

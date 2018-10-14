@@ -5,7 +5,6 @@ import org.junit.Test;
 import todo.tasks.Task;
 import todo.tasks.TaskManager;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -30,12 +29,12 @@ public class TaskManagerTest {
 
     @Test
     public void countToDoTasks() {
-        assertTrue(taskManager.countToDoTasks()==2);
+        assertTrue(taskManager.countTasks(false)==2);
     }
 
     @Test
     public void countFinishedTasks(){
-        assertTrue(taskManager.countFinishedTasks()==1);
+        assertTrue(taskManager.countTasks(true)==1);
     }
 
 
@@ -67,14 +66,14 @@ public class TaskManagerTest {
     public void countToDoTasksWhenNoTaskExist(){
         ArrayList<Task> tasks=new ArrayList<>();
         taskManager=new TaskManager(tasks);
-        assertTrue(taskManager.countToDoTasks()==0);
+        assertTrue(taskManager.countTasks(false)==0);
     }
 
     @Test
     public void countFinishedTasksWhenNoTaskExist(){
         ArrayList<Task> tasks=new ArrayList<>();
         taskManager=new TaskManager(tasks);
-        assertTrue(taskManager.countFinishedTasks()==0);
+        assertTrue(taskManager.countTasks(true)==0);
     }
 
     @Test

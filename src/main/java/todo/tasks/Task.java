@@ -63,15 +63,14 @@ public class Task implements Serializable, Comparable<Task> {
     /**
      * Compare tasks according to the due dates.
      *
-     * @param o Task object
+     * @param task Task object
      * @return an integer value for comparison
      */
     @Override
-    public int compareTo(Task o) {
-        Task tasks = o;
-        if (this.dueDate.after(tasks.dueDate)) {
+    public int compareTo(Task task) {
+        if (this.dueDate.after(task.dueDate)) {
             return 1;
-        } else if (this.dueDate.before(tasks.dueDate)) {
+        } else if (this.dueDate.before(task.dueDate)) {
             return -1;
         } else {
             return 0;

@@ -33,19 +33,8 @@ public class TaskManager {
         return taskStore.getTasks();
     }
 
-    public int countToDoTasks() {
-        return Long.valueOf(taskStore.getTasks().stream().filter(task -> !task.getStatus()).count()).intValue();
-
-    }
-
-    public int countFinishedTasks() {
-        int count = 0;
-        for (Task task : taskStore.getTasks()) {
-            if (task.getStatus() == true) {
-                count++;
-            }
-        }
-        return count;
+    public int countTasks(boolean status) {
+        return Long.valueOf(taskStore.getTasks().stream().filter(task -> task.getStatus() == status).count()).intValue();
     }
 
     /**
